@@ -1,0 +1,11 @@
+Flask
+Flask-SQLAlchemy
+requests
+Pillow
+numpy
+scikit-learn
+werkzeug
+ultralytics     
+torch            
+sentence-transformers
+rapidfuzz        
