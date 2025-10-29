@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Simple Client</title>
+</head>
+<body>
+  <h1>Client for Flask + Local Contracts</h1>
+
+  <div>
+    <label>Account (optional): <input id="account" placeholder="0x..." style="width:400px"/></label>
+  </div>
+
+  <h2>Register user</h2>
+  <input id="username" placeholder="username"/>
+  <button onclick="register()">Register</button>
+
+  <h2>Save data</h2>
+  <input id="data" placeholder="some text"/>
+  <button onclick="saveData()">Save</button>
+
+  <h2>Get items for address</h2>
+  <input id="ownerAddr" placeholder="owner address"/>
+  <button onclick="getItems()">Get items</button>
+  <pre id="items"></pre>
+
+  <h2>Deposit to conditional</h2>
+  <input id="value" placeholder="ETH value" />
+  <button onclick="deposit()">Deposit</button>
+
+<script>
+const API_BASE = "http://127.0.0.1:5000";
+
+async function register(){
+  const username = document.getElementById("username").value;
+  const account = document.getElementById("account").value || undefined;
+  const resp = await fetch(API_BASE + "/register", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ username, account })
+  });
+  alert(await resp.text());
+}
+
+async function saveData(){
+  const data = document.getElementById("data").value;
+  const account = document.getElementById("account").value || undefined;
+  const r = await fetch(API_BASE + "/save_data", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ data, account })
+  });
+  alert(await r.text());
+}
+
+async function getItems(){
+  const owner = document.getElementById("ownerAddr").value;
+  const r = await fetch(API_BASE + "/items/" + owner);
+  const j = await r.json();
+  document.getElementById("items").textContent = JSON.stringify(j, null, 2);
+}
+
+async function deposit(){
+  const value = parseFloat(document.getElementById("value").value || "0");
+  const account = document.getElementById("account").value || undefined;
+  const r = await fetch(API_BASE + "/deposit_conditional", {
+    method:"POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ value_eth: value, account })
+  });
+  alert(await r.text());
+}
+</script>
+</body>
+</html>
